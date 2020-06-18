@@ -1,16 +1,23 @@
 import React from 'react';
 import './Track.css';
 
-export class Track extends React.Component {
+class Track extends React.Component {
+    renderAction() {
+        let symbol = (this.props.isRemoval ? '-' : '+');
+        return <button className="Track-action">{symbol}</button>;
+    }
+    
     render() {
         return (
             <div className="Track">
                 <div className="Track-information">
-                    <h3>track name will go here</h3>
-                    <p>Track artist will go here | track album will go here</p>
+                    <h3>Track Name</h3>
+                    <p>Artist | Album</p>
                 </div>
-                <button className="Track-action">+ or - will go here</button>
+                {this.renderAction()}
             </div>
         )
     }
-}
+};
+
+export default Track;
