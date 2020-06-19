@@ -5,23 +5,37 @@ import SearchResults from "../SearchResults/SearchResults";
 import PlayList from "../PlayList/PlayList";
 
 let searchResults = [];
+let playlistTracks = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 8; i++) {
   let searchTrack = {
-    name: `track${i}`,
-    artist: `artist${i}`,
-    album: `album${i}`,
+    name: `Track #${i}`,
+    artist: `Artist #${i}`,
+    album: `Album #${i}`,
     id: i,
   };
 
   searchResults.push(searchTrack);
 }
 
+for (let i = 0; i < 4; i++) {
+  let playlistTrack = {
+    name: `Track #${i}`,
+    artist: `Artist #${i}`,
+    album: `Album #${i}`,
+    id: i,
+  };
+
+  playlistTracks.push(playlistTrack);
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: searchResults
+      searchResults: searchResults,
+      playlistName: 'Newer Playlist',
+      playlistTracks: playlistTracks
     };
   }
 
@@ -35,7 +49,7 @@ class App extends React.Component {
           <SearchBar />
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} />
-            <PlayList />
+            <PlayList playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
           </div>
         </div>
       </div>

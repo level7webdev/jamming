@@ -8,11 +8,15 @@ class Track extends React.Component {
     }
     
     render() {
+        const trackName = this.props.track.name;
+        const albumName = this.props.track.album;
+        const artistName = this.props.track.artist;
+
         return (
             <div className="Track">
                 <div className="Track-information">
-                    <h3>Track Name</h3>
-                    <p>Artist | Album</p>
+                    <h3>{trackName}</h3>
+                    <p>{artistName} | {albumName}</p>
                 </div>
                 {this.renderAction()}
             </div>
