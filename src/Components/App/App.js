@@ -18,17 +18,6 @@ for (let i = 0; i < 8; i++) {
   searchResults.push(searchTrack);
 }
 
-for (let i = 0; i < 4; i++) {
-  let playlistTrack = {
-    name: `Track #${i}`,
-    artist: `Artist #${i}`,
-    album: `Album #${i}`,
-    id: i,
-  };
-
-  playlistTracks.push(playlistTrack);
-}
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +29,7 @@ class App extends React.Component {
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
+    this.savePlaylist = this.savePlaylist.bind(this);
   }
 
   addTrack(track) {
@@ -60,6 +50,12 @@ class App extends React.Component {
     this.setState({ playlistName: name });
   }
 
+  savePlaylist() {
+    var trackURIs = [];
+    trackURIs = this.state.playlistTracks.map((e) => e.id);
+    // this.setState({ trackURIs: trackURIs });
+  }
+
   render() {
     return (
       <div>
@@ -78,6 +74,7 @@ class App extends React.Component {
               playlistTracks={this.state.playlistTracks}
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
+              onSave={this.savePlaylist}
             />
           </div>
         </div>
