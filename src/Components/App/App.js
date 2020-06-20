@@ -58,7 +58,7 @@ class App extends React.Component {
   savePlaylist() {
     var trackURIs = [];
     trackURIs = this.state.playlistTracks.map((e) => e.id);
-    // this.setState({ trackURIs: trackURIs });
+    this.setState({ trackURIs: trackURIs });
   }
 
   render() {
