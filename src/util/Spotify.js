@@ -47,6 +47,62 @@ const Spotify = {
       return results;
     }
   },
+
+  async savePlaylist(playlistName, tracks) {
+    if (!playlistName || !tracks) {
+      return;
+    } else {
+      const accessToken = Spotify.getAccessToken();
+      const headers = { headers: { Authorization: `Bearer ${accessToken}` } };
+      var userId;
+
+      // request current user ID
+      let response = await fetch(`https://api.spotify.com/v1/me`, headers);
+      let jsonResponse = await response.json();
+      console.log("gotten user ID");
+      userId = jsonResponse.id;
+      console.log(`User ID is ${userId}`);
+
+      // create playlist
+      let playlistPost = {
+        name: playlistName,
+      };
+      console.log(playlistPost);
+      let post = await fetch(
+        `https://api.spotify.com/v1/users/${userId}/playlists`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          method: "post",
+          body: JSON.stringify(playlistPost),
+        }
+      );
+      let newPlaylist = await post.json();
+      console.log(`creating new playlist: ${newPlaylist.name}`);
+
+      // parse playlist ID from response
+      let playlistID = await newPlaylist.id;
+      console.log(playlistID);
+
+      // submit playlist
+      console.log(
+        JSON.stringify(tracks.map((track) => `spotify:track:${track}`))
+      );
+      let submit = await fetch(
+        `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          method: "post",
+          body: JSON.stringify(tracks.map((track) => `spotify:track:${track}`)),
+        }
+      );
+
+      let filledPlaylist = await submit.json();
+      console.log(filledPlaylist);
+
+      let snapshotID = await filledPlaylist.snapshot_id;
+      console.log(snapshotID);
+    }
+  },
 };
 
 export default Spotify;
