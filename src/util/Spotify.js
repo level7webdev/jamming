@@ -94,6 +94,7 @@ const Spotify = {
           body: JSON.stringify(tracks.map((track) => `spotify:track:${track}`)),
         }
       );
+      return submit;
     }
   },
 };
