@@ -32,9 +32,12 @@ class App extends React.Component {
   connect() {
     let userId = Spotify.getUserId();
     userId.then((userId) => this.setState({ userId: userId }));
+    let userPlaylists = Spotify.getUserPlaylists();
+    userPlaylists.then((playlist) => this.setState({ userPlaylist: playlist }));
   }
 
   search(searchTerm) {
+    this.connect();
     let results = Spotify.search(searchTerm);
     results.then((tracks) => this.setState({ searchResults: tracks }));
   }
@@ -59,7 +62,7 @@ class App extends React.Component {
 
   savePlaylist() {
     var trackURIs = [];
-    trackURIs = this.state.playlistTracks.map((e) => e.id);
+    trackURIs = this.state.playlistTracks.map((e) => e.uri);
     Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() =>
       this.setState({ playlistName: "New Playlist", playlistTracks: [] })
     );

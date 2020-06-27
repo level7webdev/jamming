@@ -41,7 +41,7 @@ const Spotify = {
   async getUserPlaylists() {
     const accessToken = Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
-    const userId = Spotify.getUserId();
+    const userId = await Spotify.getUserId();
 
     let response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
       headers: headers,
@@ -93,7 +93,7 @@ const Spotify = {
     } else {
       const accessToken = Spotify.getAccessToken();
       const headers = { Authorization: `Bearer ${accessToken}` };
-      const userId = Spotify.getUserId();
+      const userId = await Spotify.getUserId();
 
       // create playlist
       let playlistPost = {
@@ -119,7 +119,7 @@ const Spotify = {
         {
           headers: headers,
           method: "POST",
-          body: JSON.stringify(tracks.map((track) => `spotify:track:${track}`)),
+          body: JSON.stringify(tracks),
         }
       );
       return submit;
