@@ -19,7 +19,7 @@ class UserPlaylist extends React.Component {
         <div className="UserPlaylist-information">
           <h3>{playlistName}</h3>
         </div>
-        <button className="UserPlaylist-action" onClick={this.loadPlaylist}>&lt;&lt;</button>
+        <button className="UserPlaylist-action" onClick={this.loadPlaylist}>&lt;</button>
       </div>
     );
   }

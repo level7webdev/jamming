@@ -23,6 +23,7 @@ class App extends React.Component {
       userPlaylists: userPlaylists,
       userId: userId,
     };
+    this.resetPlaylist = this.resetPlaylist.bind(this);
     this.connect = this.connect.bind(this);
     this.search = this.search.bind(this);
     this.addTrack = this.addTrack.bind(this);
@@ -30,6 +31,10 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.loadPlaylist = this.loadPlaylist.bind(this);
+  }
+
+  resetPlaylist() {
+    this.setState({ playlistId: "", playlistName: "New Playlist", playlistTracks: [] });
   }
 
   connect() {
@@ -109,6 +114,7 @@ class App extends React.Component {
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
               onSave={this.savePlaylist}
+              onReset={this.resetPlaylist}
             />
             <UserPlaylists
               onConnect={this.connect}
