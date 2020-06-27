@@ -21,7 +21,7 @@ class UserPlaylists extends React.Component {
           onRemove={this.props.onRemove}
           isRemoval={true}
         /> */}
-        <button className="Spotify-connect" /* onClick={this.props.onSave} */>
+        <button className="Spotify-connect" onClick={this.props.onConnect}>
           CONNECT SPOTIFY
         </button>
       </div>

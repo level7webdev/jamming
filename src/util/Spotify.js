@@ -24,6 +24,43 @@ const Spotify = {
     }
   },
 
+  async getUserId() {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
+    let response = await fetch(`https://api.spotify.com/v1/me`, {
+      headers: headers,
+    });
+    let jsonResponse = await response.json();
+    console.log("gotten user ID");
+    let userId = jsonResponse.id;
+    console.log(`User ID is ${userId}`);
+    return userId;
+  },
+
+  async getUserPlaylists() {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    const userId = Spotify.getUserId();
+
+    let response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+      headers: headers,
+    });
+    let jsonResponse = await response.json();
+    if (!jsonResponse.items) {
+      console.log("failed - no playlists");
+      return [];
+    } else {
+      console.log("successfully gotten playlists");
+      let userPlaylists = await jsonResponse.items.map(playlist => ({
+        id: playlist.id,
+        name: playlist.name,
+        uri: playlist.uri
+      }))
+      return userPlaylists;
+    }
+  },
+
   async search(searchTerm) {
     const accessToken = Spotify.getAccessToken();
     console.log(`searching with "${searchTerm}"`);
@@ -33,13 +70,13 @@ const Spotify = {
         headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
-    let data = await response.json();
-    if (!data.tracks) {
+    let jsonResponse = await response.json();
+    if (!jsonResponse.tracks) {
       console.log("failed - no tracks");
       return [];
     } else {
       console.log("successful search");
-      let results = await data.tracks.items.map((track) => ({
+      let results = await jsonResponse.tracks.items.map((track) => ({
         id: track.id,
         name: track.name,
         artist: track.artists[0].name,
@@ -56,16 +93,7 @@ const Spotify = {
     } else {
       const accessToken = Spotify.getAccessToken();
       const headers = { Authorization: `Bearer ${accessToken}` };
-      var userId;
-
-      // request current user ID
-      let response = await fetch(`https://api.spotify.com/v1/me`, {
-        headers: headers,
-      });
-      let jsonResponse = await response.json();
-      console.log("gotten user ID");
-      userId = jsonResponse.id;
-      console.log(`User ID is ${userId}`);
+      const userId = Spotify.getUserId();
 
       // create playlist
       let playlistPost = {

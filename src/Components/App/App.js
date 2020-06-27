@@ -9,6 +9,7 @@ import Spotify from "../../util/Spotify";
 let searchResults = [];
 let playlistTracks = [];
 let userPlaylists = [];
+let userId = "";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,12 +19,19 @@ class App extends React.Component {
       playlistName: "New Playlist",
       playlistTracks: playlistTracks,
       userPlaylists: userPlaylists,
+      userId: userId,
     };
+    this.connect = this.connect.bind(this);
     this.search = this.search.bind(this);
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
+  }
+
+  connect() {
+    let userId = Spotify.getUserId();
+    userId.then((userId) => this.setState({ userId: userId }));
   }
 
   search(searchTerm) {
@@ -77,7 +85,10 @@ class App extends React.Component {
               onNameChange={this.updatePlaylistName}
               onSave={this.savePlaylist}
             />
-            <UserPlaylists userPlaylists={this.state.userPlaylists} />
+            <UserPlaylists
+              onConnect={this.connect}
+              userPlaylists={this.state.userPlaylists}
+            />
           </div>
         </div>
       </div>
