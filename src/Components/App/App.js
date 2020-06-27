@@ -3,10 +3,12 @@ import "./App.css";
 import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import PlayList from "../PlayList/PlayList";
+import UserPlaylists from "../UserPlaylists/UserPlaylists";
 import Spotify from "../../util/Spotify";
 
 let searchResults = [];
 let playlistTracks = [];
+let userPlaylists = [];
 
 class App extends React.Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class App extends React.Component {
       searchResults: searchResults,
       playlistName: "New Playlist",
       playlistTracks: playlistTracks,
+      userPlaylists: userPlaylists,
     };
     this.search = this.search.bind(this);
     this.addTrack = this.addTrack.bind(this);
@@ -74,6 +77,7 @@ class App extends React.Component {
               onNameChange={this.updatePlaylistName}
               onSave={this.savePlaylist}
             />
+            <UserPlaylists userPlaylists={this.state.userPlaylists} />
           </div>
         </div>
       </div>
