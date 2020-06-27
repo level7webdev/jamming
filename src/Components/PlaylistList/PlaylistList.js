@@ -12,9 +12,7 @@ class PlaylistList extends React.Component {
               <UserPlaylist
                 playlist={playlist}
                 key={playlist.id}
-                // onAdd={this.props.onAdd}
-                // onRemove={this.props.onRemove}
-                // isRemoval={this.props.isRemoval}
+                onLoad={this.props.onLoad}
               />
             );
           })}

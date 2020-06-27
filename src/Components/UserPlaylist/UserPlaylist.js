@@ -2,6 +2,15 @@ import React from "react";
 import "./UserPlaylist.css";
 
 class UserPlaylist extends React.Component {
+  constructor(props) {
+    super(props);
+    this.loadPlaylist = this.loadPlaylist.bind(this);
+  }
+
+  loadPlaylist() {
+    this.props.onLoad(this.props.playlist)
+  }
+
   render() {
     const playlistName = this.props.playlist.name;
 
@@ -9,11 +18,8 @@ class UserPlaylist extends React.Component {
       <div className="UserPlaylist">
         <div className="UserPlaylist-information">
           <h3>{playlistName}</h3>
-          {/* <p>
-            artistName | albumName
-          </p> */}
         </div>
-        <button className="UserPlaylist-action">&lt;&lt;</button>
+        <button className="UserPlaylist-action" onClick={this.loadPlaylist}>&lt;&lt;</button>
       </div>
     );
   }

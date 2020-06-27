@@ -7,6 +7,7 @@ import UserPlaylists from "../UserPlaylists/UserPlaylists";
 import Spotify from "../../util/Spotify";
 
 let searchResults = [];
+let playlistId = "";
 let playlistTracks = [];
 let userPlaylists = [];
 let userId = "";
@@ -16,6 +17,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       searchResults: searchResults,
+      playlistId: playlistId,
       playlistName: "New Playlist",
       playlistTracks: playlistTracks,
       userPlaylists: userPlaylists,
@@ -27,13 +29,16 @@ class App extends React.Component {
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
+    this.loadPlaylist = this.loadPlaylist.bind(this);
   }
 
   connect() {
     let userId = Spotify.getUserId();
     userId.then((userId) => this.setState({ userId: userId }));
     let userPlaylists = Spotify.getUserPlaylists();
-    userPlaylists.then((playlist) => this.setState({ userPlaylists: playlist }));
+    userPlaylists.then((playlist) =>
+      this.setState({ userPlaylists: playlist })
+    );
   }
 
   search(searchTerm) {
@@ -64,9 +69,24 @@ class App extends React.Component {
     var trackURIs = [];
     trackURIs = this.state.playlistTracks.map((e) => e.uri);
     Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() =>
-      this.setState({ playlistName: "New Playlist", playlistTracks: [] })
+      this.setState({
+        playlistId: "",
+        playlistName: "New Playlist",
+        playlistTracks: [],
+      })
     );
     this.connect();
+  }
+
+  loadPlaylist(userPlaylist) {
+    let playlistTracks = Spotify.getPlaylistItems(userPlaylist.id);
+    playlistTracks.then((tracks) =>
+      this.setState({
+        playlistId: userPlaylist.id,
+        playlistName: userPlaylist.name,
+        playlistTracks: tracks,
+      })
+    );
   }
 
   render() {
@@ -83,6 +103,7 @@ class App extends React.Component {
               onAdd={this.addTrack}
             />
             <PlayList
+              playlistId={this.state.playlistId}
               playlistName={this.state.playlistName}
               playlistTracks={this.state.playlistTracks}
               onRemove={this.removeTrack}
@@ -92,6 +113,7 @@ class App extends React.Component {
             <UserPlaylists
               onConnect={this.connect}
               userPlaylists={this.state.userPlaylists}
+              onLoad={this.loadPlaylist}
             />
           </div>
         </div>

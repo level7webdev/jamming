@@ -43,21 +43,52 @@ const Spotify = {
     const headers = { Authorization: `Bearer ${accessToken}` };
     const userId = await Spotify.getUserId();
 
-    let response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
-      headers: headers,
-    });
+    let response = await fetch(
+      `https://api.spotify.com/v1/users/${userId}/playlists`,
+      {
+        headers: headers,
+      }
+    );
     let jsonResponse = await response.json();
     if (!jsonResponse.items) {
       console.log("failed - no playlists");
       return [];
     } else {
       console.log("successfully gotten playlists");
-      let userPlaylists = await jsonResponse.items.map(playlist => ({
+      let userPlaylists = await jsonResponse.items.map((playlist) => ({
         id: playlist.id,
         name: playlist.name,
-        uri: playlist.uri
-      }))
+        uri: playlist.uri,
+      }));
       return userPlaylists;
+    }
+  },
+
+  async getPlaylistItems(playlistId) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
+    let response = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        headers: headers,
+      }
+    );
+    let jsonResponse = await response.json();
+    if (!jsonResponse.items) {
+      console.log("failed - no playlist items");
+      return [];
+    } else {
+      console.log("successfully gotten playlist items");
+      console.log(jsonResponse.items);
+      let playlistItems = await jsonResponse.items.map((item) => ({
+        id: item.track.id,
+        name: item.track.name,
+        artist: item.track.artists[0].name,
+        album: item.track.album.name,
+        uri: item.track.uri,
+      }));
+      return playlistItems;
     }
   },
 
