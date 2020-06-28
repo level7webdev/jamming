@@ -80,7 +80,7 @@ const Spotify = {
       return [];
     } else {
       console.log("successfully gotten playlist items");
-      console.log(jsonResponse.items);
+      // console.log(jsonResponse.items);
       let playlistItems = await jsonResponse.items.map((item) => ({
         id: item.track.id,
         name: item.track.name,
@@ -118,43 +118,94 @@ const Spotify = {
     }
   },
 
-  async savePlaylist(playlistName, tracks) {
+  async savePlaylist(playlistName, tracks, playlistId) {
     if (!playlistName || !tracks.length) {
       return;
-    } else {
-      const accessToken = Spotify.getAccessToken();
-      const headers = { Authorization: `Bearer ${accessToken}` };
-      const userId = await Spotify.getUserId();
-
-      // create playlist
-      let playlistPost = {
-        name: playlistName,
-      };
-      let post = await fetch(
-        `https://api.spotify.com/v1/users/${userId}/playlists`,
-        {
-          headers: headers,
-          method: "POST",
-          body: JSON.stringify(playlistPost),
-        }
-      );
-      let newPlaylist = await post.json();
-      console.log(`creating new playlist: ${newPlaylist.name}`);
-
-      // parse playlist ID from response
-      let playlistID = await newPlaylist.id;
-
-      // submit playlist
-      let submit = await fetch(
-        `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
-        {
-          headers: headers,
-          method: "POST",
-          body: JSON.stringify(tracks),
-        }
-      );
-      return submit;
+    } else if (playlistName && tracks.length && !playlistId) {
+      return Spotify.newPlaylist(playlistName, tracks);
+    } else if (playlistName && tracks.length && playlistId) {
+      Spotify.renamePlaylist(playlistName, playlistId);
+      Spotify.updatePlaylist(tracks, playlistId);
     }
+  },
+
+  async newPlaylist(playlistName, tracks) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    const userId = await Spotify.getUserId();
+
+    // create playlist
+    let playlistPost = {
+      name: playlistName,
+    };
+    let post = await fetch(
+      `https://api.spotify.com/v1/users/${userId}/playlists`,
+      {
+        headers: headers,
+        method: "POST",
+        body: JSON.stringify(playlistPost),
+      }
+    );
+    let newPlaylist = await post.json();
+    console.log(`creating new playlist: ${newPlaylist.name}`);
+
+    // parse playlist ID from response
+    let playlistId = await newPlaylist.id;
+
+    // submit playlist
+    let submit = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        headers: headers,
+        method: "POST",
+        body: JSON.stringify(tracks),
+      }
+    );
+    console.log(tracks);
+    console.log(`tracks added to ${newPlaylist.name}`);
+    return submit;
+  },
+
+  async renamePlaylist(playlistName, playlistId) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
+    // rename playlist
+    let newName = {
+      name: playlistName,
+    };
+    let rename = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}`,
+      {
+        headers: headers,
+        method: "PUT",
+        body: JSON.stringify(newName),
+      }
+    );
+    // console.log(rename);
+    // let renamedPlaylist = await rename.json();
+    console.log(`changed playlist name: ${playlistName}`);
+    return rename;
+  },
+
+  async updatePlaylist(tracks, playlistId) {
+    const accessToken = Spotify.getAccessToken();
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    const body = { uris: tracks};
+
+    // console.log(JSON.stringify(body));
+
+    // update playlist
+    let update = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        headers: headers,
+        method: "PUT",
+        body: JSON.stringify(body),
+      }
+    );
+    console.log(`updated playlist tracks: ${playlistId}`)
+    return update;
   },
 };
 
