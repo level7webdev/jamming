@@ -1,5 +1,8 @@
-const clientId = "d9097d493a0d46028413d920ef333838";
-const redirectUri = "http://192.168.2.10:3000/";
+import { clientId, redirectUri } from "./SpotifyAccess";
+
+// contents of './SpotifyAccess'
+// export const clientId = ${Obtain from Spotify Dev Dashboard}
+// export const redirectUri = ${Obtain from Spotify Dev Dashboard}
 
 let accessToken;
 
@@ -191,7 +194,7 @@ const Spotify = {
   async updatePlaylist(tracks, playlistId) {
     const accessToken = Spotify.getAccessToken();
     const headers = { Authorization: `Bearer ${accessToken}` };
-    const body = { uris: tracks};
+    const body = { uris: tracks };
 
     // console.log(JSON.stringify(body));
 
@@ -204,7 +207,7 @@ const Spotify = {
         body: JSON.stringify(body),
       }
     );
-    console.log(`updated playlist tracks: ${playlistId}`)
+    console.log(`updated playlist tracks: ${playlistId}`);
     return update;
   },
 };
