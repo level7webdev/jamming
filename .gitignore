@@ -1,3 +1,3 @@
 node_modules
 .DS_Store
-src/util/SpotifyAccess.js
+# src/util/SpotifyAccess.js
