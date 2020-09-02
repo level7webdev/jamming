@@ -1,2 +1,2 @@
-export const clientId = "d9097d493a0d46028413d920ef333838";
-export const redirectUri = "http://localhost:3000/";
+export const clientId = process.env.REACT_APP_API_KEY;
+export const redirectUri = process.env.REACT_APP_REDIRECT_URL;
